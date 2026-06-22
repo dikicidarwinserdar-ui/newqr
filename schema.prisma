@@ -23,11 +23,12 @@ model ProductLabel {
 }
 
 model Lot {
-  id                 String   @id @default(uuid())
-  lotCode            String   @unique
-  labelId            String
-  referenceImagePath String?
-  createdAt          DateTime @default(now())
+  id                  String    @id @default(uuid())
+  lotCode             String    @unique
+  labelId             String
+  referenceImagePath  String?
+  referenceCapturedAt DateTime?
+  createdAt           DateTime  @default(now())
 
   label         ProductLabel          @relation(fields: [labelId], references: [id])
   verifications VerificationAttempt[]
