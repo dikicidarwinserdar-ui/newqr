@@ -1,0 +1,36 @@
+{
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main",
+    "start:dev": "nest start --watch",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@nestjs/common": "latest",
+    "@nestjs/core": "latest",
+    "@nestjs/platform-express": "latest",
+    "@nestjs/config": "latest",
+    "@prisma/client": "latest",
+    "bcryptjs": "latest",
+    "class-validator": "latest",
+    "class-transformer": "latest",
+    "multer": "latest",
+    "qrcode": "latest",
+    "rxjs": "latest",
+    "uuid": "latest",
+    "sharp": "latest"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "latest",
+    "@nestjs/schematics": "latest",
+    "@nestjs/testing": "latest",
+    "prisma": "latest",
+    "typescript": "latest",
+    "ts-node": "latest",
+    "@types/node": "latest",
+    "@types/multer": "latest",
+    "@types/qrcode": "latest",
+    "@types/uuid": "latest"
+  }
+}

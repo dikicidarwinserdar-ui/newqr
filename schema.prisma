@@ -1,0 +1,38 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+enum VerificationResult { VERIFIED SUSPICIOUS COPY }
+
+model ProductLabel {
+  id String @id @default(uuid())
+  profileNo String
+  alloy String
+  surfaceColor String
+  labelHash String @unique
+  cdpPath String?
+  qrPath String?
+  createdAt DateTime @default(now())
+  lots Lot[]
+  @@unique([profileNo, alloy, surfaceColor])
+}
+
+model Lot {
+  id String @id @default(uuid())
+  lotCode String @unique
+  labelId String
+  label ProductLabel @relation(fields: [labelId], references: [id])
+  referenceImagePath String?
+  referenceCapturedAt DateTime?
+  createdAt DateTime @default(now())
+  attempts VerificationAttempt[]
+}
+
+model VerificationAttempt {
+  id String @id @default(uuid())
+  lotId String
+  lot Lot @relation(fields: [lotId], references: [id])
+  capturedImagePath String
+  similarityScore Float
+  result VerificationResult
+  createdAt DateTime @default(now())
+}
