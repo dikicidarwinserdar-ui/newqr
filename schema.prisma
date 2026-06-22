@@ -1,38 +1,45 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
 
-enum VerificationResult { VERIFIED SUSPICIOUS COPY }
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 model ProductLabel {
-  id String @id @default(uuid())
-  profileNo String
-  alloy String
+  id           String   @id @default(uuid())
+  profileNo    String
+  alloy        String
   surfaceColor String
-  labelHash String @unique
-  cdpPath String?
-  qrPath String?
-  createdAt DateTime @default(now())
+  labelHash    String   @unique
+  cdpPath      String?
+  qrPath       String?
+  createdAt    DateTime @default(now())
+
   lots Lot[]
+
   @@unique([profileNo, alloy, surfaceColor])
 }
 
 model Lot {
-  id String @id @default(uuid())
-  lotCode String @unique
-  labelId String
-  label ProductLabel @relation(fields: [labelId], references: [id])
+  id                 String   @id @default(uuid())
+  lotCode            String   @unique
+  labelId            String
   referenceImagePath String?
-  referenceCapturedAt DateTime?
-  createdAt DateTime @default(now())
-  attempts VerificationAttempt[]
+  createdAt          DateTime @default(now())
+
+  label         ProductLabel          @relation(fields: [labelId], references: [id])
+  verifications VerificationAttempt[]
 }
 
 model VerificationAttempt {
-  id String @id @default(uuid())
-  lotId String
+  id                String   @id @default(uuid())
+  lotId             String
+  capturedImagePath String?
+  similarityScore   Float
+  result            String
+  createdAt         DateTime @default(now())
+
   lot Lot @relation(fields: [lotId], references: [id])
-  capturedImagePath String
-  similarityScore Float
-  result VerificationResult
-  createdAt DateTime @default(now())
 }
