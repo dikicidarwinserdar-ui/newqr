@@ -1,45 +1,16 @@
-generator client {
-  provider = "prisma-client-js"
-}
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+@Injectable()
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  async onModuleInit() {
+    await this.$connect();
+  }
 
-model ProductLabel {
-  id           String   @id @default(uuid())
-  profileNo    String
-  alloy        String
-  surfaceColor String
-  labelHash    String   @unique
-  cdpPath      String?
-  qrPath       String?
-  createdAt    DateTime @default(now())
-
-  lots Lot[]
-
-  @@unique([profileNo, alloy, surfaceColor])
-}
-
-model Lot {
-  id                 String   @id @default(uuid())
-  lotCode            String   @unique
-  labelId            String
-  referenceImagePath String?
-  createdAt          DateTime @default(now())
-
-  label        ProductLabel          @relation(fields: [labelId], references: [id])
-  verifications VerificationAttempt[]
-}
-
-model VerificationAttempt {
-  id                String   @id @default(uuid())
-  lotId             String
-  capturedImagePath String?
-  similarityScore   Float
-  result            String
-  createdAt         DateTime @default(now())
-
-  lot Lot @relation(fields: [lotId], references: [id])
+  async onModuleDestroy() {
+    await this.$disconnect();
+  }
 }
